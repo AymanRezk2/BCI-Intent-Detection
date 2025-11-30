@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEUROWHEEL - 2D Interface</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+        
+        /* Blurred Background Layer */
+        .blurred-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            filter: blur(40px);
+            opacity: 0.6;
+            z-index: 0;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Map Container */
+        .map-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 80%;
+            max-width: 1400px;
+            max-height: 900px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        /* Google Maps Style Map */
+        .map {
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, #e8f5e9 1px, transparent 1px),
+                linear-gradient(180deg, #e8f5e9 1px, transparent 1px),
+                #f1f8e9;
+            background-size: 40px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Map Roads */
+        .map::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                /* Horizontal roads */
+                linear-gradient(to right, transparent 45%, #bdbdbd 45%, #bdbdbd 55%, transparent 55%),
+                linear-gradient(to right, transparent 45%, #bdbdbd 45%, #bdbdbd 55%, transparent 55%),
+                linear-gradient(to right, transparent 45%, #bdbdbd 45%, #bdbdbd 55%, transparent 55%),
+                /* Vertical roads */
+                linear-gradient(to bottom, transparent 45%, #bdbdbd 45%, #bdbdbd 55%, transparent 55%),
+                linear-gradient(to bottom, transparent 45%, #bdbdbd 45%, #bdbdbd 55%, transparent 55%),
+                linear-gradient(to bottom, transparent 45%, #bdbdbd 45%, #bdbdbd 55%, transparent 55%);
+            background-size: 
+                100% 120px,
+                100% 120px,
+                100% 120px,
+                120px 100%,
+                120px 100%,
+                120px 100%;
+            background-position:
+                0 30%,
+                0 50%,
+                0 70%,
+                30% 0,
+                50% 0,
+                70% 0;
+            opacity: 0.4;
+        }
+        
+        /* Map Buildings/Blocks */
+        .map-building {
+            position: absolute;
+            background: linear-gradient(135deg, #c5e1a5 0%, #aed581 100%);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .building-1 { width: 80px; height: 100px; top: 15%; left: 20%; }
+        .building-2 { width: 60px; height: 120px; top: 10%; left: 60%; }
+        .building-3 { width: 90px; height: 80px; top: 70%; left: 15%; }
+        .building-4 { width: 70px; height: 110px; top: 65%; left: 75%; }
+        .building-5 { width: 50px; height: 90px; top: 40%; left: 45%; }
+        
+        /* Center Content */
+        .center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        /* NEUROWHEEL Text */
+        .neurowheel-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 72px;
+            font-weight: 700;
+            color: #2c3e50;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.8),
+                0 0 40px rgba(255, 255, 255, 0.6),
+                0 4px 8px rgba(0, 0, 0, 0.2);
+            letter-spacing: 4px;
+            animation: subtleFloat 3s ease-in-out infinite;
+            position: relative;
+        }
+        
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+        }
+        
+        /* Brain Illustration */
+        .brain-container {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            animation: brainPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes brainPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+        
+        .brain-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+        }
+        
+        /* UI Controls */
+        .ui-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+        }
+        
+        .control-button {
+            padding: 14px 32px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+            border: none;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .control-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .control-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-button:active {
+            transform: translateY(0);
+        }
+        
+        /* Labels */
+        .info-label {
+            position: absolute;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2c3e50;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: labelFade 2s ease-in-out infinite;
+            z-index: 10;
+        }
+        
+        @keyframes labelFade {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        
+        .label-top-left {
+            top: 30px;
+            left: 30px;
+        }
+        
+        .label-top-right {
+            top: 30px;
+            right: 30px;
+        }
+        
+        .label-bottom-left {
+            bottom: 100px;
+            left: 30px;
+        }
+        
+        /* Soft Lighting Effects */
+        .light-effect {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 2;
+            animation: lightMove 8s ease-in-out infinite;
+        }
+        
+        .light-1 {
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+        }
+        
+        .light-2 {
+            bottom: 20%;
+            right: 20%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes lightMove {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(50px, 50px) scale(1.2); opacity: 0.6; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .neurowheel-text {
+                font-size: 48px;
+            }
+            
+            .brain-container {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .center-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .ui-controls {
+                flex-direction: column;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Blurred Background -->
+    <div class="blurred-background"></div>
+    
+    <!-- Map Container -->
+    <div class="map-container">
+        <!-- Map -->
+        <div class="map">
+            <!-- Buildings -->
+            <div class="map-building building-1"></div>
+            <div class="map-building building-2"></div>
+            <div class="map-building building-3"></div>
+            <div class="map-building building-4"></div>
+            <div class="map-building building-5"></div>
+            
+            <!-- Soft Lighting Effects -->
+            <div class="light-effect light-1"></div>
+            <div class="light-effect light-2"></div>
+            
+            <!-- Center Content -->
+            <div class="center-content">
+                <!-- Brain Illustration -->
+                <div class="brain-container">
+                    <svg class="brain-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Brain Outline -->
+                        <path d="M100 20 C60 20, 30 50, 30 90 C30 110, 40 130, 50 140 C40 150, 35 165, 40 180 C50 175, 65 170, 80 165 C85 170, 90 175, 100 180 C110 175, 115 170, 120 165 C135 170, 150 175, 160 180 C165 165, 160 150, 150 140 C160 130, 170 110, 170 90 C170 50, 140 20, 100 20 Z" 
+                              fill="url(#brainGradient)" stroke="#4a5568" stroke-width="2"/>
+                        <!-- Brain Folds -->
+                        <path d="M100 40 C75 40, 55 60, 55 85 C55 95, 60 105, 70 110" 
+                              stroke="#718096" stroke-width="1.5" fill="none" opacity="0.6"/>
+                        <path d="M100 40 C125 40, 145 60, 145 85 C145 95, 140 105, 130 110" 
+                              stroke="#718096" stroke-width="1.5" fill="none" opacity="0.6"/>
+                        <path d="M100 60 C85 60, 75 75, 75 90" 
+                              stroke="#718096" stroke-width="1.5" fill="none" opacity="0.5"/>
+                        <path d="M100 60 C115 60, 125 75, 125 90" 
+                              stroke="#718096" stroke-width="1.5" fill="none" opacity="0.5"/>
+                        <path d="M100 80 C90 80, 85 95, 85 110" 
+                              stroke="#718096" stroke-width="1.5" fill="none" opacity="0.4"/>
+                        <path d="M100 80 C110 80, 115 95, 115 110" 
+                              stroke="#718096" stroke-width="1.5" fill="none" opacity="0.4"/>
+                        <!-- Gradient Definition -->
+                        <defs>
+                            <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#e2e8f0;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#cbd5e0;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#a0aec0;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <!-- NEUROWHEEL Text -->
+                <div class="neurowheel-text">NEUROWHEEL</div>
+            </div>
+            
+            <!-- Info Labels -->
+            <div class="info-label label-top-left">🧠 Brain-Controlled Interface</div>
+            <div class="info-label label-top-right">⚡ Real-Time Processing</div>
+            <div class="info-label label-bottom-left">🎯 Motor Imagery Detection</div>
+        </div>
+        
+        <!-- UI Controls -->
+        <div class="ui-controls">
+            <button class="control-button">Start</button>
+            <button class="control-button">Settings</button>
+            <button class="control-button">Help</button>
+        </div>
+    </div>
+    
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.control-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.05)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Subtle parallax effect on map buildings
+        document.addEventListener('mousemove', function(e) {
+            const buildings = document.querySelectorAll('.map-building');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            buildings.forEach((building, index) => {
+                const speed = (index + 1) * 0.5;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                building.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
