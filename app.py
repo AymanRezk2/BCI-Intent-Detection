@@ -507,8 +507,8 @@ def main():
         try:
             with st.spinner("Loading AI models..."):
                 st.session_state.pipeline = create_pipeline(
-                    eegnet_model_path="startle_blink_EEGNet_99_attention.keras",
-                    mirepnet_model_path="mirapnet_final_model.pth",
+                    eegnet_model_path="models/startle_blink_EEGNet_99_attention.keras",
+                    mirepnet_model_path="models/mirapnet_final_model.pth",
                     device='cpu'
                 )
             st.success("✓ Models loaded successfully")
