@@ -4,6 +4,8 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Deep Learning](https://img.shields.io/badge/Deep%20Learning-EEG-orange.svg)]()
 
+
+
 > Control powered wheelchairs through brain signals and eye blinks. Empowering individuals with motor disabilities through hands-free navigation.
 
 ## Overview
@@ -12,6 +14,18 @@
 
 - **Motor Imagery (MIRepNet)**: Think "left", "right", "forward", or "stop" to navigate
 - **Blink Detection (EEGNet)**: Voluntary eye blinks trigger emergency stop (99% accuracy)
+
+## 🔴 Live Demo
+
+Experience NeuroWheel in action through our interactive web application:
+👉 **Streamlit App:** https://depi-bci-27.streamlit.app/
+
+This demo showcases:
+- EEG signal preprocessing
+- Motor imagery direction prediction
+- Blink-based emergency stop simulation
+> ⚠️ Note: This demo is for research and educational purposes and does not replace medical-certified hardware systems.
+
 
 ### Target Users
 
@@ -167,3 +181,4 @@ Project Link: [https://github.com/AymanRezk2/BCI-Intent-Detection](https://githu
 ---
 
 ⭐ **Star this repo** if you find it helpful!
+
