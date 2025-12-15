@@ -15,7 +15,7 @@
 - **Motor Imagery (MIRepNet)**: Think "left", "right", "forward", or "stop" to navigate
 - **Blink Detection (EEGNet)**: Voluntary eye blinks trigger emergency stop (99% accuracy)
 
-## 🔴 Live Demo
+## Live Demo
 
 Experience NeuroWheel in action through our interactive web application:
 👉 **Streamlit App:** https://depi-bci-27.streamlit.app/
@@ -181,4 +181,5 @@ Project Link: [https://github.com/AymanRezk2/BCI-Intent-Detection](https://githu
 ---
 
 ⭐ **Star this repo** if you find it helpful!
+
 
